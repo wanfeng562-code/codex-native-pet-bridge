@@ -1,0 +1,6 @@
+{
+  "petId": "replace-with-native-pet-id",
+  "port": 46873,
+  "assetDir": "examples/deepseek-v2/assets",
+  "updateStartMenu": false
+}

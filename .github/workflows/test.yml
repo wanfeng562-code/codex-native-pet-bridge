@@ -1,0 +1,29 @@
+name: Validate bridge
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  logic-and-assets:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+      - run: npm run verify-assets
+      - name: Parse PowerShell scripts
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path . -Filter '*.ps1' -Recurse | ForEach-Object {
+            $errors = $null
+            $null = [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$null, [ref]$errors)
+            if ($errors.Count) { throw ($errors | Out-String) }
+          }
+      - name: Build GUI host from source
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./bridge/build-host.ps1

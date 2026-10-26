@@ -1,0 +1,16 @@
+{
+  "name": "codex-native-pet-bridge",
+  "version": "1.3.0",
+  "private": true,
+  "type": "module",
+  "description": "A Windows runtime bridge for native Codex pet transformations, with a Deepseek V2 example.",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test bridge/*.test.mjs",
+    "verify-assets": "node tools/verify-assets.mjs",
+    "inspect-pet": "node tools/inspect-pet.mjs",
+    "status": "node bridge/controller.mjs status",
+    "stop": "node bridge/controller.mjs stop"
+  },
+  "license": "MIT"
+}

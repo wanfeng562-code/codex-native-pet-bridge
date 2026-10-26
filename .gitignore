@@ -1,0 +1,21 @@
+# Local configuration, account-bound pet selection and installation artifacts
+bridge/config.local.json
+bridge/.runtime/
+*.lnk
+# Never redistribute clients, profiles, logs, tokens or application archives
+app-copy/
+profile/
+codex-home/
+node_modules/
+.env
+.env.*
+*.log
+*.jsonl
+*.asar
+*.exe
+*.dll
+*.db
+*.sqlite*
+__pycache__/
+.DS_Store
+Thumbs.db

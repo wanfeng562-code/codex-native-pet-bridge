@@ -1,0 +1,17 @@
+{
+  "id": "deepseek-v2-example",
+  "displayName": "deepseek酱 V2 · 桥接示例",
+  "description": "普通/戴盆两种形态；双击炸盆变身，Running 吃饭，悬停单次哈气。",
+  "spritesheetPath": "assets/deepseek-normal.webp",
+  "bridgeAssetDirectory": "examples/deepseek-v2/assets",
+  "format": "native-pet-bridge-example-v1",
+  "frameWidth": 192,
+  "frameHeight": 208,
+  "columns": 8,
+  "rows": 9,
+  "forms": ["normal", "basin"],
+  "originalAuthor": "fightingshine",
+  "source": "https://petdex.dev/pets/deepseek",
+  "artworkLicense": "LicenseRef-ThirdParty-Artwork",
+  "codeLicense": "MIT"
+}

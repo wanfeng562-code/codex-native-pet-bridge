@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deepseek 酱 V2 · 离线动作预览</title>
+<style>
+body{font:16px/1.65 system-ui,sans-serif;margin:0;background:#edf3fa;color:#18354e;min-height:100vh;display:grid;place-items:center}main{max-width:660px;margin:28px;padding:32px;background:white;border-radius:24px;box-shadow:0 10px 40px #18354e12}h1{margin:0;font-size:26px}p{color:#597084}.stage{background:#f2f7ff;border:1px solid #dce8fa;border-radius:20px;margin:24px 0;display:grid;place-items:center;padding:24px}.pet{width:192px;height:208px;background-repeat:no-repeat;background-size:800% 900%;user-select:none;cursor:pointer;touch-action:none}button{border:1px solid #aac5e3;border-radius:10px;padding:9px 16px;background:white;color:#18354e;font:inherit;cursor:pointer}button[aria-pressed=true]{background:#1c629c;color:white}nav{display:flex;gap:10px;flex-wrap:wrap}.status{font-size:14px;color:#416782}.note{font-size:13px;border-top:1px solid #e6edf5;padding-top:16px}a{color:#225f96}
+</style>
+<main>
+<h1>Deepseek 酱 V2</h1>
+<p>双击炸盆变身；鼠标移入哈一次，移开再进入可重播。</p>
+<div class="stage"><div class="pet" role="img" aria-label="Deepseek 酱动画"></div></div>
+<nav><button data-task="idle" aria-pressed="true">待机</button><button data-task="running" aria-pressed="false">Running 吃饭</button><button id="transform">双击变身</button></nav>
+<p class="status" aria-live="polite"></p>
+<p class="note">本页只是离线素材预览，不连接 Codex，也不读取账号。原生桥接见仓库 README。素材单独署名，详见 <a href="ASSET-LICENSE.md">授权说明</a>。</p>
+</main>
+<script>
+const pet=document.querySelector('.pet'),status=document.querySelector('.status');
+const durations={idle:[1680,660,660,840,840,1920],basin:[900,220,240,100,100,120,250,650],running:[90,80,90,130,90,140,150,90],hissing:[240,160,200,80,130,160,160,600],transition:[250,220,140,400,100,180,280,350]};
+let form='normal',task='idle',phase='stable',hissing=false,inside=false,timer=null,generation=0;
+function play(){
+ clearTimeout(timer);const gen=++generation;
+ let sheet=form,row=task==='running'?7:0,times=task==='running'?durations.running:form==='basin'?durations.basin:durations.idle,once=false;
+ if(phase==='transforming'){sheet='transition';row=0;times=durations.transition;once=true;}
+ else if(hissing){sheet='hissing';row=form==='basin'?1:0;times=durations.hissing;once=true;}
+ pet.style.backgroundImage=`url("assets/deepseek-${sheet}.webp")`;
+ status.textContent=`${form==='basin'?'戴盆':'普通'} · ${phase==='transforming'?'炸盆变身':hissing?'空盆哈气':task==='running'?'吃饭中':'待机'}`;
+ let index=0;
+ const paint=()=>{if(gen!==generation)return;pet.style.backgroundPosition=`${index/7*100}% ${row/8*100}%`;timer=setTimeout(()=>{index++;if(index===times.length){if(once){if(phase==='transforming'){form='basin';phase='stable';}hissing=false;play();return;}index=0;}paint();},times[index]);};paint();
+}
+function transform(){if(phase!=='stable')return;hissing=false;if(form==='basin')form='normal';else phase='transforming';play();}
+pet.addEventListener('dblclick',transform);
+pet.addEventListener('pointerenter',()=>{if(inside)return;inside=true;if(phase==='stable'){hissing=true;play();}});
+pet.addEventListener('pointerleave',()=>{inside=false;});
+document.querySelector('#transform').addEventListener('click',transform);
+document.querySelectorAll('[data-task]').forEach(button=>button.addEventListener('click',()=>{task=button.dataset.task;document.querySelectorAll('[data-task]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));play();}));
+play();
+</script>
+</html>
